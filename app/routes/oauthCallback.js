@@ -1,7 +1,7 @@
 require('dotenv').config()
-const { CLIENT_ID, REDIRECT, CLIENT_SECRET } = process.env
+const { CLIENT_ID, REDIRECT, CLIENT_SECRET, JWT_SECRET } = process.env
 const Router = require('express').Router()
-
+const jwt = require('jsonwebtoken')
 
 Router.get('/', async (req, res) => {
 
@@ -24,8 +24,10 @@ Router.get('/', async (req, res) => {
         })
         
         const fetchedData = await oauthFetch.json()
+        const generatedJwt = jwt.sign(fetchedData, JWT_SECRET, { expiresIn: 6 * 24})
         
-        res.send('Logged In: ' + JSON.stringify(fetchedData))
+        res.cookie('jwtData', generatedJwt, { maxAge: 604800000 })
+        res.send(`${generatedJwt}`)
         
     } catch (error) {
         res.statusCode(500).send('error during auth')

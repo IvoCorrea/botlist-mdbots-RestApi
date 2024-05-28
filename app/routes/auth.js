@@ -8,7 +8,7 @@ Router.get('/login', (req, res) => {
 
     const redirect_url = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT}&scope=identify`
 
-    res.redirect(redirect_url)
+    res.status(302).redirect(redirect_url)
 
 })
 

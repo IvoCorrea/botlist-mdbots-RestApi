@@ -5,7 +5,7 @@ const HttpError = require('../../src/core/HttpError');
 const app = require('../../src/main');
 const request = require('supertest');
 
-jest.mock('../../src/app/repositories/UserRepository');
+jest.mock('../../src/app/repositories/userRepository');
 jest.mock('../../src/app/middlewares/isAuthenticated');
 jest.mock('../../src/app/services/DiscordAuth');
 

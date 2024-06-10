@@ -7,7 +7,11 @@ router.get('/profile', isAuthenticated, async (req, res, next) => {
   try {
     const token = req?.auth?.access_token;
     const data = await DiscordAuth.fetchAuthUser(token);
-    return res.json(data);
+    return res.json({
+      id: data.id,
+      username: data.username,
+      avatarUrl: data.avatar_url,
+    });
   } catch (err) {
     next(err);
   }

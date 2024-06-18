@@ -5,10 +5,7 @@ const botCreate = Joi.object({
   ownerId: Joi.string().required(),
   shortDescription: Joi.string().min(10).max(140).required(),
   description: Joi.string(),
-  isVerifiedBot: Joi.boolean().default(false),
   isSlashCommands: Joi.boolean().default(false),
-  isPending: Joi.boolean().default(true),
-  isPromoted: Joi.boolean().default(false),
 });
 
 const botUpdate = Joi.object({

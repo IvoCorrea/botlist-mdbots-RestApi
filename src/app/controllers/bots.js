@@ -54,7 +54,7 @@ router.post('/', isAuthenticated, async (req, res, next) => {
     value.bannerUrl = discordBotData.banner_url;
 
     const data = await BotRepository.create(value);
-    return res.json(data);
+    return res.status(201).json(data);
   } catch (err) {
     next(err);
   }

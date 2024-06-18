@@ -57,7 +57,7 @@ describe('Testando rotas de bots', () => {
   });
 
   describe('Rota GET /bots/:id', () => {
-    it('Deve retornar os bots e o total de bots', async () => {
+    it('Deve retornar um bot', async () => {
       const botId = '1';
       const bot = { id: '1', name: 'Bot 1' };
       BotRepository.findOne.mockResolvedValue(bot);
@@ -93,7 +93,7 @@ describe('Testando rotas de bots', () => {
         botId: '12345',
         ownerId: '12345',
         shortDescription: 'SHORTDESCRIPTION',
-        isVerifiedBot: false,
+        isSlashCommands: true,
       };
 
       const discordData = {
@@ -112,7 +112,7 @@ describe('Testando rotas de bots', () => {
       });
 
       const res = await request(app).post('/bots').send(data);
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(201);
       expect(res.body).toEqual(
         expect.objectContaining({
           ...data,
@@ -132,7 +132,7 @@ describe('Testando rotas de bots', () => {
         botId: '12345',
         ownerId: '12345',
         shortDescription: 'SHORTDESCRIPTION',
-        isVerifiedBot: false,
+        isSlashCommands: true,
       };
       const res = await request(app).post('/bots').send(data);
 
@@ -145,7 +145,7 @@ describe('Testando rotas de bots', () => {
         botId: '12345',
         ownerId: '12345',
         shortDescription: 'SHORTDESCRIPTION',
-        isVerifiedBot: false,
+        isSlashCommands: true,
       };
       BotRepository.findOne.mockResolvedValue(data);
 

@@ -99,9 +99,11 @@ module.exports = class DiscordAuth {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const data = res.data;
-      const format = data.avatar.startsWith('a_') ? 'gif' : 'png';
-      const avatarUrl = data.avatar
+      const data = res?.data;
+      if (res.status !== 200 || !data) throw new Error();
+      
+      const format = data.avatar?.startsWith('a_') ? 'gif' : 'png';
+      const avatarUrl = data?.avatar
         ? `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.${format}?size=4096`
         : 'https://cdn.discordapp.com/embed/avatars/0.png?size=4096';
 

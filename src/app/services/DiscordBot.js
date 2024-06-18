@@ -24,12 +24,12 @@ module.exports = class DiscordBot {
       if (res.status !== 200 || !data) throw new Error();
       if (!data.bot) throw new HttpError(HttpError.Status.BadRequest, 'Esse id não é de um bot');
 
-      const avatarFormat = data.avatar.startsWith('a_') ? 'gif' : 'png';
-      const avatarUrl = data.avatar
+      const avatarFormat = data.avatar?.startsWith('a_') ? 'gif' : 'png';
+      const avatarUrl = data?.avatar
         ? `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.${avatarFormat}?size=4096`
         : 'https://cdn.discordapp.com/embed/avatars/0.png?size=4096';
 
-      const bannerFormat = data.banner.startsWith('a_') ? 'gif' : 'png';
+      const bannerFormat = data.banner?.startsWith('a_') ? 'gif' : 'png';
       const bannerUrl = data.banner
         ? `https://cdn.discordapp.com/banners/${data.id}/${data.banner}.${bannerFormat}?size=4096`
         : 'https://cdn.discordapp.com/embed/avatars/0.png?size=4096';

@@ -1,6 +1,6 @@
+const { create, isAxiosError } = require('axios').default;
 const HttpError = require('../../core/HttpError');
 const { discord } = require('../../config');
-const { create } = require('axios').default;
 
 module.exports = class DiscordAuth {
   static instance = create({
@@ -42,15 +42,15 @@ module.exports = class DiscordAuth {
       });
 
       const res = await DiscordAuth.instance.post('/oauth2/token', discordQueryParams.toString());
-      const data = res?.data;
-      if (res?.status !== 200 || !data)
-        throw new HttpError(HttpError.Status.BadRequest, 'Erro ao gerar token');
+      const data = res.data;
+      if (res.status !== 200 || !data) throw new Error();
 
       return data;
     } catch (err) {
-      if (err.response)
-        throw new HttpError(HttpError.Status.BadRequest, err.response.data.message || err.message);
-      else throw err;
+      if (isAxiosError(err))
+        throw new HttpError(HttpError.Status.BadRequest, 'Erro ao solicitar token');
+      else
+        throw new HttpError(HttpError.Status.BadRequest, err?.message || 'Erro ao solicitar token');
     }
   }
   /**
@@ -71,17 +71,19 @@ module.exports = class DiscordAuth {
       });
 
       const res = await DiscordAuth.instance.post('/oauth2/token', discordQueryParams.toString());
-      if (res?.status !== 200)
-        throw new HttpError(HttpError.Status.BadRequest, 'Erro ao da refresh no token');
+      const data = res.data;
 
-      const data = res?.data;
-      if (!data) throw new HttpError(HttpError.Status.BadRequest, 'Erro ao da refresh no token');
+      if (res.status !== 200 || !data) throw new Error();
 
       return data;
     } catch (err) {
-      if (err.response)
-        throw new HttpError(HttpError.Status.BadRequest, err.response.data.message || err.message);
-      else throw err;
+      if (isAxiosError(err))
+        throw new HttpError(HttpError.Status.BadRequest, 'Erro ao da refresh no token');
+      else
+        throw new HttpError(
+          HttpError.Status.BadRequest,
+          err?.message || 'Erro ao da refresh no token'
+        );
     }
   }
   /**
@@ -97,11 +99,8 @@ module.exports = class DiscordAuth {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const data = res?.data;
-      if (res?.status !== 200 || !data)
-        throw new HttpError(HttpError.Status.BadRequest, 'Erro ao buscar dados do usuário');
-
-      const format = data.avatar?.startsWith('a_') ? 'gif' : 'png';
+      const data = res.data;
+      const format = data.avatar.startsWith('a_') ? 'gif' : 'png';
       const avatarUrl = data.avatar
         ? `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.${format}?size=4096`
         : 'https://cdn.discordapp.com/embed/avatars/0.png?size=4096';
@@ -113,9 +112,16 @@ module.exports = class DiscordAuth {
         email: data.email,
       };
     } catch (err) {
-      if (err.response)
-        throw new HttpError(HttpError.Status.BadRequest, err.response.data.message || err.message);
-      else throw err;
+      if (isAxiosError(err))
+        throw new HttpError(
+          HttpError.Status.BadRequest,
+          'Erro ao buscar dados do usuário autenticado'
+        );
+      else
+        throw new HttpError(
+          HttpError.Status.BadRequest,
+          err?.message || 'Erro ao buscar dados do usuário autenticado'
+        );
     }
   }
 };
